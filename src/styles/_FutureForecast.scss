@@ -1,0 +1,55 @@
+.future-forecast.block.container {
+  // padding-left: 1em;
+  // padding-right: 1em;
+  grid-area: F;
+  padding-top: 4rem;
+  min-width: 11rem;
+}
+.future-forecast-item {
+  position: relative;
+  display: grid;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-items: start;
+  // justify-content: space-between;
+  grid-template-columns: 45% 15% 40%;
+  width: 100%;
+  font-size: 0.9em;
+  margin-bottom: 1rem;
+
+  .label {
+    font-size: 0.9em;
+    font-weight: 400;
+    width: 100%;
+  }
+  .day {
+    font-size: 1.02em;
+    font-weight: 500;
+  }
+  .weather {
+    font-weight: 400;
+    @include x.centerFlex();
+  }
+  .icon {
+    width: 100%;
+  }
+  .temperature {
+    font-size: 1.02em;
+    font-weight: 500;
+  }
+}
+.future-forecast-item::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1.5px;
+  background-color: $color-light-purple;
+  left: 0;
+  top: 100%;
+}
+@media screen and (min-width: 1024px) {
+  .future-forecast-item {
+    font-size: 0.7em;
+    margin-bottom: 1.5rem;
+  }
+}

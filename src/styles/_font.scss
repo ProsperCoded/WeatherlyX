@@ -1,0 +1,8 @@
+@use "./globalMixins" as x;
+$secondary-font: "expert-round";
+$secondary-font-bold: "expert-round-bold";
+@include x.embed-font($secondary-font, "./../static/fonts/expert-round.TTF");
+@include x.embed-font(
+  $secondary-font-bold,
+  "./../static/fonts/expert-round-bold.TTF"
+);

@@ -1,0 +1,129 @@
+@use "sass:math";
+@mixin reset-range-input(
+  $size: 1rem,
+  $primary-color: white,
+  $secondary-color: gray
+) {
+  width: 100%;
+  -webkit-appearance: none;
+  background: transparent;
+  outline: none !important;
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: $size;
+    width: $size;
+    border-radius: 50%;
+    background: $secondary-color;
+    box-shadow: 0 0 2px 0 #555;
+    border: math.div($size, 5) solid $primary-color;
+    transform: translateY(-50%);
+    margin-top: math.div($size, 5);
+  }
+  &::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: $primary-color;
+    border-radius: 2rem;
+    height: math.div($size, 3);
+    cursor: pointer;
+  }
+  &::-moz-range-thumb {
+    -moz-appearance: none;
+    height: $size;
+    width: $size;
+    border-radius: 50%;
+    background: $secondary-color;
+    box-shadow: 0 0 2px 0 #555;
+    border: math.div($size, 5) solid $primary-color;
+    // transform: translateY(-50%);
+    margin-top: math.div($size, 5);
+  }
+  &::-moz-range-track {
+    -moz-appearance: none;
+    box-shadow: none;
+    border: none;
+    background: $primary-color;
+    border-radius: 2rem;
+    height: math.div($size, 3);
+    cursor: pointer;
+  }
+}
+
+@function listOtherSrc($list) {
+  $sources: "";
+  @each $_url, $_format in $list {
+    $src: "url(#{$_url}) format(#{$_format}),";
+    $sources: $sources + $src;
+  }
+  @return unquote($string: $sources);
+}
+
+@mixin embed-font($font-name, $url, $format: "truetype", $extra: null) {
+  $base_src: "url(#{$url}) format(#{$format})";
+  $other_src: "";
+  @if $extra {
+    $other_src: listOtherSrc($extra);
+    $base_src: $base_src + "," + $other_src;
+  }
+  @font-face {
+    font-family: $font-name;
+    src: unquote($base_src);
+    font-weight: normal;
+    font-style: normal;
+  }
+}
+
+@mixin clickable($hover_color: null) {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  @if $hover_color {
+    transition: background-color 100ms linear;
+    @debug "tinting hover color";
+    &:hover {
+      background-color: $hover_color;
+    }
+  }
+}
+
+// @mixin resetAbsolute(){
+
+// }
+@mixin generateGridClasses($col, $row: 1) {
+  @for $c from 1 through $col {
+    @for $r from 1 through $row {
+      .grid-#{$r}x#{$c} {
+        display: grid;
+        grid-template-columns: repeat($c, 1fr);
+        grid-template-rows: repeat($r, 1fr);
+        align-items: center;
+        justify-items: center;
+      }
+    }
+    .grid-autox#{$c} {
+      display: grid;
+      grid-template-columns: repeat($c, 1fr);
+      grid-auto-rows: minmax(50px, 1fr);
+      align-items: center;
+      justify-items: center;
+    }
+  }
+}
+
+@mixin resetList() {
+  appearance: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@mixin centerFlex() {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@mixin reset-button-input() {
+  outline: none;
+  border: none;
+}

@@ -1,0 +1,265 @@
+@use "sass:color";
+@use "sass:math";
+@use "globalMixins" as x;
+
+.search {
+  width: 100%;
+  z-index: 2;
+  border: none;
+  box-shadow: 0px 2px 3px 0.5px rgb(31, 31, 31);
+  border-radius: $border-radius;
+  padding: 0.5rem 1em;
+  background-color: color.adjust($color-purple, $alpha: -1);
+  border: 1.5px solid $color-light-purple;
+  &::placeholder {
+    color: color.adjust($color-light-purple, $alpha: -0.4);
+  }
+  outline: none;
+  color: $color-light-purple;
+  margin-bottom: 0.3em;
+  margin-top: 0.3em;
+  transition: box-shadow 300ms ease-in;
+  // position: relative;
+}
+.search-container {
+  overflow: visible;
+  .search__results {
+    z-index: 2;
+    @include x.resetList();
+    // min-height: 1rem;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    background-color: color.adjust($color-blue, $alpha: -0.5);
+    color: $color-light-purple;
+    height: auto;
+    left: 0;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    transition-property: height, padding;
+    transition-timing-function: ease-in;
+    transition-duration: 200ms;
+  }
+  .search__result {
+    margin-bottom: 0.5em;
+    position: relative;
+    cursor: pointer;
+    .name {
+      font-weight: 550;
+    }
+    .region {
+      font-weight: 450;
+    }
+    .country {
+      font-weight: 450;
+    }
+    transition: transform 100ms ease-in;
+    & > *:hover {
+      -moz-text-decoration-line: underline;
+      text-decoration-line: underline;
+      -moz-text-underline-offset: 4px;
+      -moz-text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 2px;
+    }
+    &:hover {
+      transform: scale(1.07);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 1.5px;
+      background-color: $color-light-purple;
+      left: 0;
+      bottom: 0;
+    }
+  }
+}
+
+.search:focus {
+  box-shadow: 0 0 0 0;
+}
+.main {
+  width: 100%;
+
+  background-image: url("./../static/icons/day.png");
+
+  background-position: center;
+  background-origin: bottom;
+  background-size: max(30%, 10rem);
+  background-repeat: no-repeat;
+  background-position: bottom 10% right 30%;
+  grid-area: M;
+  position: relative;
+}
+.main.container {
+  margin: 0 auto;
+  padding-top: 0;
+}
+.mode {
+  background-color: color.scale(
+    color.adjust($color-light-purple, $alpha: -0.1),
+    $saturation: 10%
+  );
+  @include x.clickable($hover_color: darken($color-light-purple, 5%));
+  color: $color-purple;
+
+  font-family: $secondary-font;
+  margin: 0 2%;
+  border-radius: math.div($border-radius, 2);
+  text-align: center;
+  padding: 0.1em;
+  font-weight: 500;
+  font-size: 0.9em;
+
+  .label {
+    font-weight: 600;
+    margin: 0 0.5em;
+  }
+  .info {
+    font-size: 0.8em;
+    &::before {
+      content: "(";
+    }
+    &::after {
+      content: ")";
+    }
+  }
+}
+
+.weather {
+  display: flex;
+  justify-content: space-between;
+  &__city {
+    font-size: clamp(2em, 5vw, 5em);
+    font-weight: 400;
+    margin: 0;
+  }
+  &__country {
+    font-size: clamp(1em, 3vw, 4em);
+    margin: 0;
+  }
+  &__description {
+    font-size: 1em;
+    font-weight: 200;
+  }
+  &__value {
+    font-weight: 100;
+    font-size: max(1.5em, 4vw);
+  }
+  &__time {
+    @include x.centerFlex();
+    vertical-align: middle;
+    justify-content: end;
+    img {
+      margin: 0 5px;
+    }
+  }
+}
+@media screen and (min-width: 768px) {
+  .mode {
+    font-size: 1.2em;
+  }
+}
+@media screen and (min-width: 1440px) {
+  .mode {
+    margin: 0 10%;
+  }
+}
+.weather-container {
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 30rem;
+}
+.theme {
+  font-family: $secondary-font;
+  display: inline-block;
+  width: 6em;
+  border: 3px solid $color-light-purple;
+  $border-radius-theme: 10rem;
+  border-radius: $border-radius-theme;
+  padding: 0.3rem;
+  background-image: $gradient-accent;
+  @include x.centerFlex();
+  justify-content: space-between;
+
+  &__toggler {
+    @include x.reset-button-input();
+    @include x.clickable();
+    background-color: $color-light-purple;
+    height: 1.5em;
+    width: 1.5em;
+    border-radius: $border-radius-theme;
+  }
+  &__name {
+    margin: 0 0.5rem;
+    letter-spacing: 2px;
+    font-weight: 400;
+  }
+}
+.change-location {
+  background-image: $gradient-accent;
+  border-radius: $border-radius;
+  padding: 0.5em 0.5em;
+  font-weight: 500;
+  @include x.clickable();
+  transition: box-shadow 70ms linear;
+  font-size: 0.7em;
+  text-align: center;
+}
+.change-location:hover {
+  box-shadow: 0 0 5px 0 $color-purple;
+}
+@keyframes moveUnitToggler {
+  0% {
+  }
+}
+.weather-unit {
+  position: relative;
+  margin-top: 40%;
+  @include x.centerFlex();
+  font-family: $secondary-font-bold;
+  $toggler-height: 1rem;
+  vertical-align: baseline;
+  @include x.clickable();
+  .weather-unit__toggler {
+    @include x.reset-button-input();
+    width: $toggler-height;
+    height: $toggler-height;
+    border-radius: 50%;
+    border: 3px solid $color-purple;
+    background-origin: padding-box;
+    position: absolute;
+    transition-property: left, right;
+    transition-timing-function: ease-in;
+    transition-duration: 1.5s;
+  }
+  &::before {
+    content: "°C";
+    position: absolute;
+    left: 1ch;
+  }
+  &::after {
+    content: "°F";
+    position: absolute;
+    right: 1ch;
+  }
+  .weather-unit__toggler-container {
+    height: $toggler-height;
+    background-color: $color-light-purple;
+    border-radius: 10rem;
+    width: 3rem;
+    position: relative;
+  }
+}
+
+:has(> .theme) {
+  justify-self: right;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
