@@ -67,7 +67,8 @@ export async function get(url: URL, preErrorMsg: string) {
 export function spaceOut(s: string) {
   return " " + s + " ";
 }
-export function formatDate(date: Date, hour12: boolean) {
+export function formatDate(date: Date | undefined, hour12: boolean) {
+  if (!date) return "";
   var strTime = date.toLocaleString("en-US", {
     hour: "numeric",
     minute: "numeric",

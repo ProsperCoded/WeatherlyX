@@ -5,16 +5,14 @@ import gust_wind_image from "./../static/images/conditions/gust-wind.svg";
 import windDirectionImage from "./../static/images/conditions/compass.svg";
 import forwardImage from "./../static/images/conditions/forward.svg";
 import arrow from "./../static/images/conditions/arrow.svg";
-import { loadingImg } from "../services/types";
 
 function Conditions() {
   const userLocation = useContext(UserLocationContext);
   const [locationData] = useContext(LocationData);
-  console.log("location data:", locationData);
-  return locationData ? (
-    <div className="container block " style={{ zIndex: 2 }}>
+  return (
+    <div className="container block conditions " style={{ zIndex: 2 }}>
       <p className="heading">ALL CONDITIONS</p>
-      <div className="grid-1x3 conditions">
+      <div className="grid-1x3 conditions-container">
         <DewPointCondition />
         <GustWind />
         <WindDirection />
@@ -23,12 +21,11 @@ function Conditions() {
         <MoreOptions />
       </div>
     </div>
-  ) : (
-    <img src={loadingImg} alt="" />
   );
 }
 function MoreOptions() {
-  const [locationData] = useContext(LocationData);
+  const [locationData, setLocationData, skeletonClass] =
+    useContext(LocationData);
   const [open, setOpen] = useState<Boolean>(false);
   return (
     <div className="more-details">
@@ -50,13 +47,13 @@ function MoreOptions() {
       >
         <li className="more-details__item grid-1x2">
           <span className="label">Cloud Cover :</span>{" "}
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.cloud.toString()}%
           </span>
         </li>
         <li className="more-details__item grid-2x2">
           <span className="label">Visibility :</span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.vis_km.toString()} km
           </span>
           <span className="value">
@@ -65,25 +62,25 @@ function MoreOptions() {
         </li>
         <li className="more-details__item grid-2x2">
           <span className="label">Precipitation :</span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.precip_mm.toString()} per mm
           </span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.precip_in.toString()} per Inch
           </span>
         </li>
         <li className="more-details__item grid-2x2">
           <span className="label">Pressure :</span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.pressure_mb.toString()} millibars
           </span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.pressure_in.toString()} Inch of mercury
           </span>
         </li>
         <li className="more-details__item grid-1x2">
           <span className="label">CO in air:</span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.air_quality.co} µg/m³
           </span>
         </li>
@@ -91,7 +88,7 @@ function MoreOptions() {
           <span className="label">
             NO<sub>2</sub> in air:
           </span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.air_quality.no2} µg/m³
           </span>
         </li>
@@ -99,7 +96,7 @@ function MoreOptions() {
           <span className="label">
             O<sub>3</sub> in air:
           </span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.air_quality.o3} µg/m³
           </span>
         </li>
@@ -107,7 +104,7 @@ function MoreOptions() {
           <span className="label">
             SO<sub>2</sub> in air:
           </span>
-          <span className="value">
+          <span className={skeletonClass + "value"}>
             {locationData?.current.air_quality.so2} µg/m³
           </span>
         </li>
@@ -116,34 +113,43 @@ function MoreOptions() {
   );
 }
 function DewPointCondition() {
-  const locationData = useContext(LocationData);
+  const [locationData, setLocationData, skeletonClass] =
+    useContext(LocationData);
+
   return (
     <div className="condition__dew-point condition">
       <img src={DewPointImage} alt="" className="condition__image" />
       <div>
         <div className="label">Dew Point </div>
-        <div className="value">{locationData[0]?.current.humidity}%</div>
+        <div className={skeletonClass + "value"}>
+          {locationData && locationData.current.humidity + "%"}
+        </div>
       </div>
     </div>
   );
 }
 
 function GustWind() {
-  const locationData = useContext(LocationData);
+  const [locationData, setLocationData, skeletonClass] =
+    useContext(LocationData);
   return (
     <div className="condition__gust-wind condition">
       <img src={gust_wind_image} alt="" className="condition__image" />
       <div>
         <div className="label">Gust / Wind</div>
         <div className="value grid-2x1">
-          <span className="km-hr">
-            {locationData[0]?.current.gust_kph}/
-            {locationData[0]?.current.wind_kph}
+          <span className={skeletonClass + "km-hr"}>
+            {locationData &&
+              locationData.current.gust_kph +
+                "/" +
+                locationData.current.wind_kph}
           </span>
 
-          <span className="m-h">
-            {locationData[0]?.current.gust_mph}/
-            {locationData[0]?.current.wind_mph}
+          <span className={skeletonClass + "m-h"}>
+            {locationData &&
+              locationData.current.gust_mph +
+                "/" +
+                locationData.current.wind_mph}
           </span>
         </div>
       </div>
@@ -161,20 +167,24 @@ function WindDirection() {
   }, [locationData]);
   return (
     <div className="condition__wind-direction condition">
-      <span className="condition__compass-label">
-        ({locationData?.current.wind_dir} {locationData?.current.wind_degree}
-        °)
-      </span>
+      {locationData && (
+        <span className="condition__compass-label">
+          ({locationData?.current.wind_dir} {locationData?.current.wind_degree}
+          °)
+        </span>
+      )}
       <div>
         <img src={windDirectionImage} alt="" className="condition__image" />
-        <div className="compass-arrow-container">
-          <img
-            src={arrow}
-            alt=""
-            className="condition__compass-arrow"
-            ref={compass}
-          />
-        </div>
+        {locationData && (
+          <div className="compass-arrow-container">
+            <img
+              src={arrow}
+              alt=""
+              className="condition__compass-arrow"
+              ref={compass}
+            />
+          </div>
+        )}
       </div>
       <div>
         <div className="label"> Wind Direction</div>

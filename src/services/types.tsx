@@ -61,5 +61,4 @@ export type SEARCH_RESULT = {
   country: string;
 };
 
-export const loadingImg = require("./../static/images/loading.gif");
 export const iconImageContext = require.context("./../static/icons", true);

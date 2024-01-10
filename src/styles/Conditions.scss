@@ -1,9 +1,10 @@
 .conditions {
-  gap: 0.2em;
-  overflow: auto;
   grid-area: C;
 }
-
+.conditions-container {
+  gap: 0.2em;
+  overflow: auto;
+}
 // General styles for conditions
 .condition {
   font-size: max(0.6em, 2vw);
@@ -36,14 +37,14 @@
   }
   .km-hr {
     border-bottom: 2px solid $color-light-purple;
-    &::after {
+    &:not(.skeleton)::after {
       content: "(km/h)";
       font-size: 0.7em;
       font-weight: 300;
     }
   }
   .m-h {
-    &::after {
+    &:not(.skeleton)::after {
       content: "(m/h)";
       font-size: 0.7em;
       font-weight: 300;

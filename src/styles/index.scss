@@ -57,6 +57,32 @@
   // margin: 1em auto;
 }
 //  Desktop
+@keyframes skeleton-animate {
+  0% {
+    background-color: hsl(200, 20%, 60%);
+    // background-position: left bottom;
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+    // background-position: right top;
+  }
+}
+.skeleton {
+  display: block;
+  width: 100%;
+  opacity: 0.45;
+  animation: skeleton-animate 1s linear infinite alternate;
+
+  // background-size: 500%;
+  // background-image: radial-gradient(white 10%, rgb(158, 158, 158));
+}
+.skeleton:not(img) {
+  @extend .skeleton;
+  height: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 0.6rem 0.6rem;
+}
+
 @media screen and (min-width: 1024px) {
   .App {
     // font-size: 1.2em;

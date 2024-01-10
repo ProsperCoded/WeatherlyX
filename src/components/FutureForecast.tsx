@@ -1,6 +1,5 @@
 import { useContext, useId } from "react";
 import { LocationData } from "../App";
-import { loadingImg } from "../services/types";
 import moment from "moment";
 moment.updateLocale("en", {
   calendar: {
@@ -14,12 +13,13 @@ moment.updateLocale("en", {
 });
 
 function FutureForecast() {
-  const [locationData] = useContext(LocationData);
-  return locationData ? (
+  const [locationData, setLocationData, skeletonClass] =
+    useContext(LocationData);
+  return (
     <div className="future-forecast block container">
       <p className="heading">FUTURE FORECAST</p>
       <div>
-        {locationData.forecast.forecastday.map((forecast, index) => {
+        {locationData?.forecast.forecastday.map((forecast, index) => {
           if (index === 0) return undefined;
           return (
             <FutureForecastItem
@@ -29,21 +29,29 @@ function FutureForecast() {
             />
           );
         })}
+        {!locationData &&
+          ["", "", "", "", ""].map((e) => {
+            return (
+              <div className="future-forecast-item">
+                <div className={skeletonClass + "day"}></div>
+                <div className={skeletonClass + "weather"}>
+                  <img className="icon" title="forecast image" alt="" />
+                </div>
+                <span className={skeletonClass + "label"}></span>
+              </div>
+            );
+          })}
       </div>
     </div>
-  ) : (
-    <img src={loadingImg} alt="" />
   );
 }
 
 function FutureForecastItem({
   time,
-  // temperature,
   image,
   label,
 }: {
   time: Date;
-  // temperature: string;
   image: string;
   label: string;
 }) {
@@ -59,7 +67,6 @@ function FutureForecastItem({
         <img className="icon" src={image} title="forecast image" alt="" />
       </div>
       <span className="label">{label}</span>
-      {/* <span className="temperature">{temperature}</span> */}
     </div>
   );
 }

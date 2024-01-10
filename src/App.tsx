@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles/index.scss";
-import icons_map from "./main-icons-map.json";
 import Main from "./components/Main";
 import Conditions from "./components/Conditions";
 import TodayForecast from "./components/TodayForecast";
@@ -83,9 +82,10 @@ export const ModeContext = React.createContext<
 export const LocationData = React.createContext<
   [
     FORECAST_LOCATION_OBJECT | undefined,
-    React.Dispatch<React.SetStateAction<FORECAST_LOCATION_OBJECT | undefined>>
+    React.Dispatch<React.SetStateAction<FORECAST_LOCATION_OBJECT | undefined>>,
+    string
   ]
->([undefined, () => {}]);
+>([undefined, () => {}, ""]);
 export const forecast_days = 7;
 function App() {
   const userLocation = useGetLocation();
@@ -111,8 +111,16 @@ function App() {
     <LocationData.Provider
       value={
         mode === MODE.CurrentCity
-          ? [currentLocationData, setCurrentLocationData]
-          : [searchLocationData, setSearchLocationData]
+          ? [
+              currentLocationData,
+              setCurrentLocationData,
+              currentLocationData ? "" : " skeleton ",
+            ]
+          : [
+              searchLocationData,
+              setSearchLocationData,
+              searchLocationData ? "" : " skeleton ",
+            ]
       }
     >
       <ModeContext.Provider value={[mode, setMode]}>

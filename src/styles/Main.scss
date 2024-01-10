@@ -156,6 +156,12 @@
       margin: 0 5px;
     }
   }
+  & > :nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    gap: 1em;
+  }
 }
 @media screen and (min-width: 768px) {
   .mode {

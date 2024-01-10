@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useRef, useState, useId } from "react";
-// import weather_conditions from "./../weather_conditions.csv";
 import {
   ICON_PROPERTIES,
   LocationData,
@@ -21,7 +20,6 @@ import {
   SEARCH_RESULT,
   WEATHER_UNIT,
   iconImageContext,
-  loadingImg,
 } from "../services/types";
 import { formatDate, joinTimePartitions, spaceOut } from "../services/general";
 import { log } from "../services/general";
@@ -42,7 +40,8 @@ function getWeatherImageName(code: number, is_day: number) {
 }
 
 function Main() {
-  const [locationData, setLocationData] = useContext(LocationData);
+  const [locationData, setLocationData, skeletonClass] =
+    useContext(LocationData);
   const userLocation = useContext(UserLocationContext);
   let [date, setDate] = useState<Date>();
   let [weatherUnit] = useContext(WeatherUnitContext!);
@@ -53,30 +52,24 @@ function Main() {
     if (userLocation.value) {
       fetchForecastData(userLocation.value, 7).then((response) => {
         setLocationData(response);
-        // console.log("location Object", locationObject);
       });
     }
   }, [userLocation.value]);
 
   useEffect(() => {
     if (locationData && mainRef.current) {
-      console.log("location data, ", locationData);
       setDate(new Date(locationData?.location.localtime!));
       const key = getWeatherImageName(
         locationData?.current.condition.code,
         locationData?.current.is_day
       );
       if (key) {
-        console.log("key is ", key);
-        const part_url = locationData.current.is_day
-          ? "day/" + key + ".png"
-          : "night/" + key + ".png";
-
-        const image = `/static/icons/${key}.png`;
         mainRef.current.style.backgroundImage = `url(${iconImageContext(
           `./${key}.png`
         )})`;
       }
+    } else if (!locationData && date) {
+      setDate(undefined);
     }
   }, [locationData]);
   return (
@@ -102,25 +95,21 @@ function Main() {
         </div>
       </div>
       <Search mainRef={mainRef} />
-      <div className=" weather">
-        <div className="weather-container">
-          {locationData?.location ? (
-            <span>
-              <h4 className="weather__city">{locationData?.location.name}</h4>
-              <p className="weather__country">
-                ({locationData?.location.country})
-              </p>
-            </span>
-          ) : (
-            <img src={loadingImg} alt="" />
-          )}
-          {!locationData?.location && mode === MODE.Search && (
-            <h3>You haven't made any Search</h3>
-          )}
-          <h5 className="weather__description">
+      <div className="weather">
+        <div className="weather-container" style={{ width: "100%" }}>
+          <span>
+            <h4 className={skeletonClass + "weather__city"}>
+              {locationData?.location.name}
+            </h4>
+            <p className={skeletonClass + "weather__country"}>
+              {locationData && "(" + locationData?.location.country + ")"}
+            </p>
+          </span>
+
+          <h5 className={skeletonClass + "weather__description"}>
             {locationData?.current.condition.text}
           </h5>
-          <h3 className="weather__value">
+          <h3 className={"weather__value" + skeletonClass}>
             {locationData?.current.temp_c &&
               (weatherUnit === WEATHER_UNIT.Celsius
                 ? locationData?.current.temp_c + weatherUnit
@@ -128,21 +117,18 @@ function Main() {
           </h3>
         </div>
         <div>
-          <Theme />
+          {/* <Theme /> */}
           <ChangeLocation />
-          <span className="weather__time">
-            {locationData ? (
-              <>
-                <img src={timeIcon} alt="" />
-                {date && formatDate(date, true)}
-              </>
-            ) : (
-              <img src={loadingImg} alt="" />
-            )}
+          <span className={"weather__time" + skeletonClass}>
+            {date && <img src={timeIcon} alt="" />}
+            {formatDate(date, true)}
           </span>
           <WeatherUnitToggler />
         </div>
       </div>
+      {!locationData?.location && mode === MODE.Search && (
+        <h3>You haven't made any Search</h3>
+      )}
     </div>
   );
 }
